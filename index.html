@@ -51,6 +51,14 @@
         width: 100%;
       }
 
+      td.invert {
+        text-shadow: #2cff00 1px 1px 9px, #2cff00 1px -1px 9px,
+          #2cff00 -1px 1px 9px, #2cff00 -1px -1px 9px;
+      }
+      td.synapse.invert {
+        text-shadow: darkgreen 1px 1px 8px, darkgreen -1px 1px 8px,
+          darkgreen 1px -1px 8px;
+      }
       td {
         font-size: 20px;
         height: 8px;
@@ -139,30 +147,42 @@
         .join("");
     }
 
-    function changeItemInHtml(
-      x,
-      y,
-      target,
-      className,
-      title,
-      SIDELENGTH = 130
-    ) {
-      !changeItemInHtml.memList
-        ? (changeItemInHtml.memList = document.querySelectorAll("td"))
-        : true;
-      changeItemInHtml.memList[y * SIDELENGTH + x].innerText = target;
-      changeItemInHtml.memList[y * SIDELENGTH + x].className = className;
-      changeItemInHtml.memList[y * SIDELENGTH + x].title = title;
+    function handleMove(xInPixels, yInPixels) {
+      // console.log(xInPixels, window.innerWidth);
+      if (!handleMove.realWidth)
+        handleMove.realWidth = document
+          .querySelector("table")
+          .getBoundingClientRect().width;
 
-      changeItemInHtml.memList[y * SIDELENGTH + x].style.boxShadow =
-        "0px 0px 0px 1px green";
-      changeItemInHtml.memList[y * SIDELENGTH + x].style.transform =
-        "scale(1.4)";
-      setTimeout(() => {
-        changeItemInHtml.memList[y * SIDELENGTH + x].style.boxShadow = "none";
-        changeItemInHtml.memList[y * SIDELENGTH + x].style.transform =
-          "scale(1)";
-      }, 20);
+      changeClassInHtml(
+        Math.floor((xInPixels / handleMove.realWidth) * widthInLetters),
+        Math.floor((yInPixels / window.innerHeight) * heightInLetters),
+        "invert"
+      );
     }
+
+    function changeClassInHtml(x, y, className) {
+      if (!changeClassInHtml.memArr) {
+        changeClassInHtml.memArr = [];
+        document
+          .querySelectorAll("tr")
+          .forEach((tr) =>
+            changeClassInHtml.memArr.push(tr.querySelectorAll("td"))
+          );
+      }
+      if (changeClassInHtml.memArr[y] && changeClassInHtml.memArr[y][x])
+        changeClassInHtml.memArr[y][x].classList.toggle(className);
+    }
+
+    document.addEventListener("mousemove", function (e) {
+      const x = e.clientX;
+      const y = e.clientY;
+      handleMove(x, y);
+    });
+    document.addEventListener("touchmove", function (e) {
+      const x = e.changedTouches[0].clientX;
+      const y = e.changedTouches[0].clientY;
+      handleMove(x, y);
+    });
   </script>
 </html>
