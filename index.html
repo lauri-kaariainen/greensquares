@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Static Template</title>
+    <style>
+      html {
+        background: #0f0f23;
+        color: #cccccc;
+        color: #64c168;
+      }
+
+      td.synapse {
+        /* background: #348138; */
+        /* color: #0f0f23; */
+        text-shadow: #2cff00 1px 1px 9px, #2cff00 1px -1px 9px,
+          #2cff00 -1px 1px 9px, #2cff00 -1px -1px 9px;
+      }
+
+      /* td.synapse.route {
+            color: #ccffcc;
+            text-shadow: 0 0 9px #ccffcc, 0 0 10px #e9ffe9, 0 0 11px #e8ffe8;
+        }
+
+        .synapse.route.finish {
+            color: black;
+            background: #ccffcc;
+        } */
+
+      body {
+        font-family: monospace;
+        cursor: crosshair;
+        overflow: auto;
+        padding: 0;
+        margin: 0;
+      }
+
+      table {
+        width: 100vw;
+        height: 100vh;
+        /* table-layout: fixed; */
+      }
+
+      .row,
+      tr {
+        display: block;
+        /* height: 16px; */
+        height: 8px;
+        width: 100%;
+      }
+
+      td {
+        font-size: 20px;
+        height: 8px;
+        line-height: 8px;
+        text-shadow: darkgreen 1px 1px 8px, darkgreen -1px 1px 8px,
+          darkgreen 1px -1px 8px;
+        /* text-shadow: #2cff00 1px 1px 2px, #2cff00 1px -1px 2px,
+          #2cff00 -1px 1px 2px, #2cff00 -1px -1px 2px; */
+        /* height: 2px; */
+        /* line-height: 10px; */
+        /* width: 12px; */
+        max-width: 14.2px;
+        min-width: 14.2px;
+        padding: 0px;
+      }
+
+      /*
+      background: #64c168;
+            color: white;*/
+    </style>
+  </head>
+  <body>
+    <table></table>
+  </body>
+
+  <script>
+    const SIDELENGTH = 130;
+    const LINEHEIGHT = 8;
+    const LINEWIDTH = 14.2;
+
+    const BOXSIZE = 20;
+
+    const heightInLetters = Math.floor(window.innerHeight / LINEHEIGHT);
+    const widthInLetters = Math.floor(window.innerWidth / LINEWIDTH);
+
+    console.log(
+      "heightinletters",
+      heightInLetters,
+      "widthinletters",
+      widthInLetters
+    );
+
+    var arr = Array.from(new Array(heightInLetters)).map((e) =>
+      Array.from(new Array(widthInLetters)).map((e) => ".")
+    );
+
+    const newArr = arr.map((line, y) =>
+      line.map((ch, x) =>
+        (Math.floor((y / BOXSIZE) % 2) || Math.floor((x / BOXSIZE) % 2)) &&
+        !(Math.floor((y / BOXSIZE) % 2) && Math.floor((x / BOXSIZE) % 2))
+          ? //   Math.floor((x * line.length) / divider) % 2) ||
+            // (Math.floor((y * arr.length) / divider) % 2 &&
+            //   Math.floor((x * line.length) / divider) % 2 === 0)
+            "#"
+          : "."
+      )
+    );
+
+    drawToHtml(newArr);
+
+    function drawToHtml(arr) {
+      document.querySelector("table").innerHTML = arr
+        .map(
+          (line, y) =>
+            "<tr class='row'>" +
+            line
+              .map(
+                (ch, x) =>
+                  `<td
+                        title="(${x},${y})"
+                        class="${
+                          ch === "#"
+                            ? "synapse"
+                            : ch === "F"
+                            ? "finish"
+                            : ch === "S"
+                            ? "start"
+                            : ch === "X"
+                            ? "block"
+                            : ""
+                        }">${"."}</td>`
+              )
+              .join(" ") +
+            "</tr>"
+        )
+        .join("");
+    }
+
+    function changeItemInHtml(
+      x,
+      y,
+      target,
+      className,
+      title,
+      SIDELENGTH = 130
+    ) {
+      !changeItemInHtml.memList
+        ? (changeItemInHtml.memList = document.querySelectorAll("td"))
+        : true;
+      changeItemInHtml.memList[y * SIDELENGTH + x].innerText = target;
+      changeItemInHtml.memList[y * SIDELENGTH + x].className = className;
+      changeItemInHtml.memList[y * SIDELENGTH + x].title = title;
+
+      changeItemInHtml.memList[y * SIDELENGTH + x].style.boxShadow =
+        "0px 0px 0px 1px green";
+      changeItemInHtml.memList[y * SIDELENGTH + x].style.transform =
+        "scale(1.4)";
+      setTimeout(() => {
+        changeItemInHtml.memList[y * SIDELENGTH + x].style.boxShadow = "none";
+        changeItemInHtml.memList[y * SIDELENGTH + x].style.transform =
+          "scale(1)";
+      }, 20);
+    }
+  </script>
+</html>
