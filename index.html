@@ -10,6 +10,7 @@
         background: #0f0f23;
         color: #cccccc;
         color: #64c168;
+        /* overflow: hidden; */
       }
 
       td.synapse {
@@ -17,6 +18,35 @@
         /* color: #0f0f23; */
         text-shadow: #2cff00 1px 1px 9px, #2cff00 1px -1px 9px,
           #2cff00 -1px 1px 9px, #2cff00 -1px -1px 9px;
+      }
+      td.synapse2 {
+        /* yellowish */
+        text-shadow: #e5ff00 1px 1px 9px, #e5ff00 1px -1px 9px,
+          #e5ff00 -1px 1px 9px, #e5ff00 -1px -1px 9px;
+      }
+      td.synapse3 {
+        /*redish*/
+        text-shadow: #ff2121 1px 1px 9px, #ff2121 1px -1px 9px,
+          #ff2121 -1px 1px 9px, #ff2121 -1px -1px 9px;
+      }
+      td.synapse4 {
+        /*whitish*
+        text-shadow: #fff 1px 1px 9px, #fff 1px -1px 9px, #fff -1px 1px 9px,
+          #fff -1px -1px 9px;
+      }
+      
+      td.yellowsynapse {
+        /* background: #348138; */
+        /* color: #0f0f23; */
+        /* yellowish */
+        /* text-shadow: #e5ff00 1px 1px 9px, #e5ff00 1px -1px 9px,
+          #e5ff00 -1px 1px 9px, #e5ff00 -1px -1px 9px; */
+        /*redish*/
+        /* text-shadow: #ff2121 1px 1px 9px, #ff2121 1px -1px 9px,
+          #ff2121 -1px 1px 9px, #ff2121 -1px -1px 9px; */
+        /*whitish*
+        /* text-shadow: #fff 1px 1px 9px, #fff 1px -1px 9px, #fff -1px 1px 9px,
+          #fff -1px -1px 9px; */
       }
 
       /* td.synapse.route {
@@ -35,6 +65,7 @@
         overflow: auto;
         padding: 0;
         margin: 0;
+        overflow: hidden;
       }
 
       table {
@@ -89,7 +120,7 @@
     const LINEHEIGHT = 8;
     const LINEWIDTH = 14.2;
 
-    const BOXSIZE = 20;
+    const BOXSIZE = 15;
 
     const heightInLetters = Math.floor(window.innerHeight / LINEHEIGHT);
     const widthInLetters = Math.floor(window.innerWidth / LINEWIDTH);
@@ -167,11 +198,23 @@
         document
           .querySelectorAll("tr")
           .forEach((tr) =>
-            changeClassInHtml.memArr.push(tr.querySelectorAll("td"))
+            changeClassInHtml.memArr.push(Array.from(tr.querySelectorAll("td")))
           );
+        changeClassInHtml.originalValues = changeClassInHtml.memArr.map(
+          (tdArr) => tdArr.map((td) => td.className)
+        );
+        console.log(changeClassInHtml.originalValues);
       }
-      if (changeClassInHtml.memArr[y] && changeClassInHtml.memArr[y][x])
-        changeClassInHtml.memArr[y][x].classList.toggle(className);
+
+      for (let i = x - 5; i < x + 5; i++) {
+        for (let j = y - 5; j < y + 5; j++) {
+          if (changeClassInHtml.memArr[j] && changeClassInHtml.memArr[j][i])
+            if (changeClassInHtml.originalValues[j][i] === "synapse")
+              // changeClassInHtml.memArr[j][i].classList.toggle(className);
+              changeClassInHtml.memArr[j][i].classList.remove("synapse");
+            else changeClassInHtml.memArr[j][i].classList.add("synapse2");
+        }
+      }
     }
 
     document.addEventListener("mousemove", function (e) {
