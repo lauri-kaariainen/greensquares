@@ -19,6 +19,12 @@
         text-shadow: #2cff00 1px 1px 9px, #2cff00 1px -1px 9px,
           #2cff00 -1px 1px 9px, #2cff00 -1px -1px 9px;
       }
+      td.synapse1 {
+        /* background: #348138; */
+        /* color: #0f0f23; */
+        text-shadow: #2cff00 1px 1px 9px, #2cff00 1px -1px 9px,
+          #2cff00 -1px 1px 9px, #2cff00 -1px -1px 9px;
+      }
       td.synapse2 {
         /* yellowish */
         text-shadow: #e5ff00 1px 1px 9px, #e5ff00 1px -1px 9px,
@@ -30,11 +36,11 @@
           #ff2121 -1px 1px 9px, #ff2121 -1px -1px 9px;
       }
       td.synapse4 {
-        /*whitish*
+        /*whitish*/
         text-shadow: #fff 1px 1px 9px, #fff 1px -1px 9px, #fff -1px 1px 9px,
           #fff -1px -1px 9px;
       }
-      
+
       td.yellowsynapse {
         /* background: #348138; */
         /* color: #0f0f23; */
@@ -44,7 +50,7 @@
         /*redish*/
         /* text-shadow: #ff2121 1px 1px 9px, #ff2121 1px -1px 9px,
           #ff2121 -1px 1px 9px, #ff2121 -1px -1px 9px; */
-        /*whitish*
+        /*whitish*/
         /* text-shadow: #fff 1px 1px 9px, #fff 1px -1px 9px, #fff -1px 1px 9px,
           #fff -1px -1px 9px; */
       }
@@ -212,10 +218,28 @@
             if (changeClassInHtml.originalValues[j][i] === "synapse")
               // changeClassInHtml.memArr[j][i].classList.toggle(className);
               changeClassInHtml.memArr[j][i].classList.remove("synapse");
-            else changeClassInHtml.memArr[j][i].classList.add("synapse2");
+            else {
+              changeClassInHtml.memArr[j][i].classList.remove(
+                "synapse",
+                "synapse1",
+                "synapse2",
+                "synapse3",
+                "synapse4"
+              );
+              changeClassInHtml.memArr[j][i].classList.add(
+                changeClassInHtml.classInUse
+              );
+            }
         }
       }
     }
+
+    setInterval(
+      () =>
+        (changeClassInHtml.classInUse =
+          "synapse" + Math.ceil(Math.random() * 4)),
+      2000
+    );
 
     document.addEventListener("mousemove", function (e) {
       const x = e.clientX;
