@@ -40,6 +40,16 @@
         text-shadow: #fff 1px 1px 9px, #fff 1px -1px 9px, #fff -1px 1px 9px,
           #fff -1px -1px 9px;
       }
+      td.synapse5 {
+        /* purple */
+        text-shadow: #ea81ff 1px 1px 9px, #ea81ff 1px -1px 9px,
+          #ea81ff -1px 1px 9px, #ea81ff -1px -1px 9px;
+      }
+      td.synapse6 {
+        /* blue */
+        text-shadow: #5980ff 1px 1px 9px, #5980ff 1px -1px 9px,
+          #5980ff -1px 1px 9px, #5980ff -1px -1px 9px;
+      }
 
       td.yellowsynapse {
         /* background: #348138; */
@@ -166,17 +176,7 @@
                 (ch, x) =>
                   `<td
                         title="(${x},${y})"
-                        class="${
-                          ch === "#"
-                            ? "synapse"
-                            : ch === "F"
-                            ? "finish"
-                            : ch === "S"
-                            ? "start"
-                            : ch === "X"
-                            ? "block"
-                            : ""
-                        }">${"."}</td>`
+                        class="${ch === "#" ? "synapse" : ""}">${"."}</td>`
               )
               .join(" ") +
             "</tr>"
@@ -224,7 +224,9 @@
                 "synapse1",
                 "synapse2",
                 "synapse3",
-                "synapse4"
+                "synapse4",
+                "synapse5",
+                "synapse6"
               );
               changeClassInHtml.memArr[j][i].classList.add(
                 changeClassInHtml.classInUse
@@ -237,7 +239,7 @@
     setInterval(
       () =>
         (changeClassInHtml.classInUse =
-          "synapse" + Math.ceil(Math.random() * 4)),
+          "synapse" + Math.ceil(Math.random() * 6)),
       2000
     );
 
