@@ -51,30 +51,6 @@
           #5980ff -1px 1px 9px, #5980ff -1px -1px 9px;
       }
 
-      td.yellowsynapse {
-        /* background: #348138; */
-        /* color: #0f0f23; */
-        /* yellowish */
-        /* text-shadow: #e5ff00 1px 1px 9px, #e5ff00 1px -1px 9px,
-          #e5ff00 -1px 1px 9px, #e5ff00 -1px -1px 9px; */
-        /*redish*/
-        /* text-shadow: #ff2121 1px 1px 9px, #ff2121 1px -1px 9px,
-          #ff2121 -1px 1px 9px, #ff2121 -1px -1px 9px; */
-        /*whitish*/
-        /* text-shadow: #fff 1px 1px 9px, #fff 1px -1px 9px, #fff -1px 1px 9px,
-          #fff -1px -1px 9px; */
-      }
-
-      /* td.synapse.route {
-            color: #ccffcc;
-            text-shadow: 0 0 9px #ccffcc, 0 0 10px #e9ffe9, 0 0 11px #e8ffe8;
-        }
-
-        .synapse.route.finish {
-            color: black;
-            background: #ccffcc;
-        } */
-
       body {
         font-family: monospace;
         cursor: crosshair;
@@ -166,6 +142,16 @@
 
     drawToHtml(newArr);
 
+    const arrayOfTDs = Array.from(document.querySelectorAll("tr")).map((tr) =>
+      Array.from(tr.querySelectorAll("td"))
+    );
+
+    const originalClassesArray = arrayOfTDs.map((tdArr) =>
+      tdArr.map((td) => td.className)
+    );
+
+    // console.log(arrayOfTDs);
+
     function drawToHtml(arr) {
       document.querySelector("table").innerHTML = arr
         .map(
@@ -184,74 +170,88 @@
         .join("");
     }
 
-    function handleMove(xInPixels, yInPixels) {
-      // console.log(xInPixels, window.innerWidth);
-      if (!handleMove.realWidth)
-        handleMove.realWidth = document
-          .querySelector("table")
-          .getBoundingClientRect().width;
+    // function handleMove(xInPixels, yInPixels) {
+    //   // console.log(xInPixels, window.innerWidth);
+    //   if (!handleMove.realWidth)
+    //     handleMove.realWidth = document
+    //       .querySelector("table")
+    //       .getBoundingClientRect().width;
 
-      changeClassInHtml(
-        Math.floor((xInPixels / handleMove.realWidth) * widthInLetters),
-        Math.floor((yInPixels / window.innerHeight) * heightInLetters),
-        "invert"
-      );
-    }
+    //   changeClassInHtml(
+    //     Math.floor((xInPixels / handleMove.realWidth) * widthInLetters),
+    //     Math.floor((yInPixels / window.innerHeight) * heightInLetters),
+    //     "invert"
+    //   );
+    // }
 
-    function changeClassInHtml(x, y, className) {
-      if (!changeClassInHtml.memArr) {
-        changeClassInHtml.memArr = [];
-        document
-          .querySelectorAll("tr")
-          .forEach((tr) =>
-            changeClassInHtml.memArr.push(Array.from(tr.querySelectorAll("td")))
-          );
-        changeClassInHtml.originalValues = changeClassInHtml.memArr.map(
-          (tdArr) => tdArr.map((td) => td.className)
+    function crawlAndColor(currLine = 0) {
+      setTimeout(() => {
+        arrayOfTDs[currLine].forEach(
+          (td, i) => td.classList.toggle("invert")
+          // (td.className =
+          //   td.className === "synapse"
+          //     ? changeClassInHtml.classInUse
+          //     : "synapse1")
         );
-        console.log(changeClassInHtml.originalValues);
-      }
-
-      for (let i = x - 5; i < x + 5; i++) {
-        for (let j = y - 5; j < y + 5; j++) {
-          if (changeClassInHtml.memArr[j] && changeClassInHtml.memArr[j][i])
-            if (changeClassInHtml.originalValues[j][i] === "synapse")
-              // changeClassInHtml.memArr[j][i].classList.toggle(className);
-              changeClassInHtml.memArr[j][i].classList.remove("synapse");
-            else {
-              changeClassInHtml.memArr[j][i].classList.remove(
-                "synapse",
-                "synapse1",
-                "synapse2",
-                "synapse3",
-                "synapse4",
-                "synapse5",
-                "synapse6"
-              );
-              changeClassInHtml.memArr[j][i].classList.add(
-                changeClassInHtml.classInUse
-              );
-            }
-        }
-      }
+        crawlAndColor(currLine >= arrayOfTDs.length - 1 ? 0 : currLine + 1);
+      }, 50);
     }
 
-    setInterval(
-      () =>
-        (changeClassInHtml.classInUse =
-          "synapse" + Math.ceil(Math.random() * 6)),
-      2000
-    );
+    // function changeClassInHtml(x, y, className) {
+    //   if (!changeClassInHtml.memArr) {
+    //     changeClassInHtml.memArr = [];
+    //     document
+    //       .querySelectorAll("tr")
+    //       .forEach((tr) =>
+    //         changeClassInHtml.memArr.push(Array.from(tr.querySelectorAll("td")))
+    //       );
+    //     changeClassInHtml.originalValues = changeClassInHtml.memArr.map(
+    //       (tdArr) => tdArr.map((td) => td.className)
+    //     );
+    //     console.log(changeClassInHtml.originalValues);
+    //   }
 
-    document.addEventListener("mousemove", function (e) {
-      const x = e.clientX;
-      const y = e.clientY;
-      handleMove(x, y);
-    });
-    document.addEventListener("touchmove", function (e) {
-      const x = e.changedTouches[0].clientX;
-      const y = e.changedTouches[0].clientY;
-      handleMove(x, y);
-    });
+    //   for (let i = x - 5; i < x + 5; i++) {
+    //     for (let j = y - 5; j < y + 5; j++) {
+    //       if (changeClassInHtml.memArr[j] && changeClassInHtml.memArr[j][i])
+    //         if (changeClassInHtml.originalValues[j][i] === "synapse")
+    //           // changeClassInHtml.memArr[j][i].classList.toggle(className);
+    //           changeClassInHtml.memArr[j][i].classList.remove("synapse");
+    //         else {
+    //           changeClassInHtml.memArr[j][i].classList.remove(
+    //             "synapse",
+    //             "synapse1",
+    //             "synapse2",
+    //             "synapse3",
+    //             "synapse4",
+    //             "synapse5",
+    //             "synapse6"
+    //           );
+    //           changeClassInHtml.memArr[j][i].classList.add(
+    //             changeClassInHtml.classInUse
+    //           );
+    //         }
+    //     }
+    //   }
+    // }
+
+    // setInterval(
+    //   () =>
+    //     (changeClassInHtml.classInUse =
+    //       "synapse" + Math.ceil(Math.random() * 6)),
+    //   2000
+    // );
+    crawlAndColor();
+
+    // document.addEventListener("mousemove", function (e) {
+    //   const x = e.clientX;
+    //   const y = e.clientY;
+    //   handleMove(x, y);
+    // });
+    // document.addEventListener("touchmove", function (e) {
+    //   const x = e.changedTouches[0].clientX;
+    //   const y = e.changedTouches[0].clientY;
+    //   handleMove(x, y);
+    // });
   </script>
 </html>
